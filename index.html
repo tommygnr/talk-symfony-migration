@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Migrating a SaaS App to Symfony</title>
+
+		<meta name="description" content="">
+		<meta name="author" content="Tom Corrigan">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Migrating a SaaS App to Symfony</h1>
+					<h3>Digital Poets Society - Symfony2 Meetup (Melbourne) - Nov 2015</h3>
+					<p>
+						<small>Tom Corrigan / <a href="http://twitter.com/tommygnr">@tommygnr</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h1>About Me</h1>
+
+					<ul>
+						<li>Lead Developer at <a href="https://estimateone.com">EstimateOne</a></li>
+						<li>Co-Founder of <a href="http://rostercloud.com">RosterCloud</a></li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>About EstimateOne (LOGO HERE)</h1>
+					<p>Last year $53 billion of commercial construction work was posted to EstimateOne.
+
+					Behind this great success story is (a steaming pile of shit)
+
+					#1 Position in the market</p>
+
+					<ul>
+						<li>Lead Developer at <a href="https://estimateone.com">EstimateOne</a></li>
+						<li>Co-Founder of <a href="http://rostercloud.com">RosterCloud</a></li>
+					</ul>
+				</section>
+
+				<section>Original code is 8 years old. 8 years ago x was the most popular framework. At that time Symfony had just made it to 1.0 and supported PHP 5.0 and up. Even if EstimateOne was built to best practices at the time it would still need rewriting. However, it wasn't.</section>
+
+				<section>
+					<h1>Why Symfony2?</h1>
+
+					<ul>
+						<li>Team has PHP expertise</li>
+						<li>Symfony2 is best in class PHP framework</li>
+						<li>Take advantage of the ecosystem</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>The team</h1>
+
+					<ul>
+						<li>- 3 Devs + 1 part time dev ops + 1 technical CEO</li>
+						<li>Will</li>
+						<li>James</li>
+						<li>Rami</li>
+						<li>Andrew</li>
+						<li>Tom</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Challenges</h1>
+
+					<ul>
+						<li>Write the amazing new app while maintaining the existing product.</li>
+						<li>Migrating data from the old app to the new</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked</h1>
+
+					<ul>
+						<li>Deployments with capistrano</li>
+						<li>Slack for team communication</li>
+						<li>Ansible/Devops</li>
+						<li>PHPStorm</li>
+						<li>Avoiding PHP when appropriate</li>
+						<li>Innobackupex streaming database to local</li>
+						<li>Code Review</li>
+						<li>Continuous Integration</li>
+						<li>github</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What didn't</h1>
+
+					<ul>
+						<li>Throw everything out and start from scratch</li>
+						<li>Time estimates</li>
+						<li>Premature optimisation</li>
+						<li>Low spec iMacs</li>
+						<li>bitbucket (show graphs)</li>
+						<li>hipchat</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Capistrano</h1>
+
+					<pre><code class="hljs" data-trim contenteditable>
+					$ bin/cap prod deploy
+					</code></pre>
+
+					<ul>
+						<li>Notifies slack channel deployment started</li>
+						<li>Checks build status with GitHub - if it's not green deploy aborts</li>
+						<li>Updates code on all web servers, composer install etc</li>
+						<li>Runs migrations</li>
+						<li>Builds assets with gulp etc</li>
+						<li>Sends deploy success notification to slack</li>
+						<li>Reloads php-fpm for 0 downtime deploy</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Slack</h1>
+
+					<ul>
+						<li>No more productivity killing interruptions</li>
+						<li>Searchable archive</li>
+						<li>Gifs (rockets)</li>
+						<li>Integrations
+							<ul>
+								<li>Everybody knows I'm deploying</li>
+								<li>Everybody knows James broke the build</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Ansible + Vagrant</h1>
+
+					<pre><code class="hljs" data-trim contenteditable>
+					$ ansible-playbook playbook.yml
+					</code></pre>
+
+					<ul>
+						<li>Integrates extremely nicely with vagrant</li>
+						<li>Rolling out config changes is as easy as deploying code changes</li>
+						<li>prod/dev parity - not a single issue in production that slipped through due to a different dev environment</li>
+						<li>Anyone can understand and reason about our server infrastructure</li>
+						<li>Changes to production environment can be easily tested locally</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - PHPStorm</h1>
+
+					<ul>
+						<li>I used to hate IDEs - not anymore</li>
+						<li>Knows every service</li>
+						<li>Crazy good intellisense</li>
+						<li>Cheap!</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Ditching PHP</h1>
+
+					<ul>
+						<li>There are some things you shouldn't use PHP for</li>
+						<li>Creating 1.5Gb zip archives is one of them</li>
+						<li>Node.js to the rescue</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Ditching SQL dumps</h1>
+
+					<ul>
+						<li>Used to backup via sql dumps (we skipped the big tables to speed it up) 45 mins</li>
+						<li>Importing sql dumps to dev even more painful 1.5 - 2 hours</li>
+						<li>Innobackupex does a file level backup</li>
+						<li>Can sync a 35GB database from prod to local dev in ~40mins</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h1>What worked - Code review</h1>
+
+					<ul>
+						<li>Every piece of work, no matter how small, gets reviewed</li>
+						<li>We catch multiple bugs every week</li>
+						<li>Code quality much higher</li>
+						<li>Coding standards are maintained</li>
+						<li>Productivity is higher too!</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - Continuous integration</h1>
+
+					<ul>
+						<li>We have 2 functional tests! - Have caught 4 bugs this way!</li>
+						<li>50 unit tests - no bugs yet, but greater confidence in refactoring</li>
+						<li>We need to double down here</li>
+						<li>Scope to add
+						<ul>
+							<li>coding style checks</li>
+							<li>Checks for missing migrations</li>
+							<li>Performance tests (eg too many queries on a page)</li>
+							<li>Cross browser testing</li>
+						</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What worked - GitHub</h1>
+
+					<ul>
+						<li>Bitbucket sucked</li>
+						<li>Look at productivity gain from switching to github</li>
+						<li>We didn't realise how much we hated bitbucket</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What didn't work - Time Estimates</h1>
+
+					<ul>
+						<li>Not a good look for a company called EstimateOne!</li>
+						<li>Initial prediction, launched late december 2014.</li>
+						<li>Missed every date we set up to late July - so we stopped setting them</li>
+						<li>Finally launched September 26</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What didn't work - Scope creep and premature optimisation</h1>
+
+					<ul>
+						<li>Don't build it til you need it</li>
+						<li>We still have entities that we haven't used.</li>
+						<li>Features were added then ripped out (morale killer)</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h1>What didn't work - Low spec hardware</h1>
+
+					<ul>
+						<li>Our iMacs had mechanical hard disks and 8Gb ram</li>
+						<li>Running multiple vagrant machines + phpstorm was excruciating</li>
+						<li>Don't skimp on something you're using 35-40 hours a week</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What didn't work - Atlassian products</h1>
+
+					<ul>
+						<li>HipChat: ew</li>
+						<li>Bitbucket: Recall productivity gains </li>
+						<li>I won't be buying shares</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h1>Migration script</h1>
+
+					<ul>
+						<li>772 commits, 6000 lines in one file!</li>
+						<li>Extract/transform/load 35GB data.</li>
+						<li>Biggest table had 90million rows</li>
+						<li>xhprof/uprofiler</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What we did well</h1>
+
+					<ul>
+						<li>Wrote and tested a migration playbook - 10 pages, all the nitty gritty</li>
+						<li>Optimised the heck out of the slow stuff (godsend, re deletion fuckup), eg mig script, elasticsearch population</li>
+
+					</ul>
+				</section>
+				<section>
+					<h1>What we didn't do well</h1>
+
+					<ul>
+						<li>Follow the migration playbook</li>
+						<li>Get enough sleep</li>
+						<li>Delay launch until we were ready!</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What's next</h1>
+
+					<ul>
+						<li>Statsd</li>
+						<li>Elasticsearch/logstash/kibana</li>
+						<li>New products</li>
+					</ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
