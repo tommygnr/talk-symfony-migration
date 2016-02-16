@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Migrating a SaaS App to Symfony</title>
+		<title>Migrating a Legacy App to Symfony</title>
 
 		<meta name="description" content="">
 		<meta name="author" content="Tom Corrigan">
@@ -39,8 +39,8 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<h1>Migrating a SaaS App to Symfony</h1>
-					<h3>Digital Poets Society - Symfony2 Meetup (Melbourne) - Nov 2015</h3>
+					<h1>Migrating a Legacy App to Symfony</h1>
+					<h3>Melbourne Symfony2 Meetup - Nov 2015</h3>
 					<p>
 						<small>Tom Corrigan / <a href="http://twitter.com/tommygnr">@tommygnr</a></small>
 					</p>
@@ -56,20 +56,45 @@
 				</section>
 
 				<section>
-					<h1>About EstimateOne (LOGO HERE)</h1>
-					<p>Last year $53 billion of commercial construction work was posted to EstimateOne.
-
-					Behind this great success story is (a steaming pile of shit)
-
-					#1 Position in the market</p>
-
+					<h1>About EstimateOne</h1>
 					<ul>
-						<li>Lead Developer at <a href="https://estimateone.com">EstimateOne</a></li>
-						<li>Co-Founder of <a href="http://rostercloud.com">RosterCloud</a></li>
+						<li>Started in 2008</li>
+						<li>Last year $53 billion of construction work was posted on EstimateOne.</li>
+						<li>#1 Position in Australia</li>
+						<li>Just Launched in New Zealand</li>
 					</ul>
 				</section>
 
-				<section>Original code is 8 years old. 8 years ago x was the most popular framework. At that time Symfony had just made it to 1.0 and supported PHP 5.0 and up. Even if EstimateOne was built to best practices at the time it would still need rewriting. However, it wasn't.</section>
+				<section>
+					<h3>Subcontractor noticeboard</h3>
+					<img src="images/eo-noticeboard.png">
+				</section>
+
+				<section>
+					<h3>Builder portal</h3>
+					<img src="images/eo-dashboard.png">
+				</section>
+
+				<section>
+					<h1>Sounds good so far</h1>
+					<h2>Except</h2>
+
+					<ul>
+						<li>The codebase is as old as the app</li>
+						<li>Lots of bad practices</li>
+						<li>Servers are hand configured, running different OS versions</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Business Challenges</h1>
+
+					<ul>
+						<li>Write the amazing new app while maintaining the existing product.</li>
+						<li>Migrating data from the old app to the new</li>
+						<li>Make the migration a win for customers, not just developers</li>
+					</ul>
+				</section>
 
 				<section>
 					<h1>Why Symfony2?</h1>
@@ -85,21 +110,70 @@
 					<h1>The team</h1>
 
 					<ul>
-						<li>- 3 Devs + 1 part time dev ops + 1 technical CEO</li>
-						<li>Will</li>
-						<li>James</li>
-						<li>Rami</li>
-						<li>Andrew</li>
-						<li>Tom</li>
+						<li>3 Devs + 1 part time dev ops + 1 technical CEO</li>
+						<li>Andrew - Technical CEO</li>
+						<li>Rami - Dev</li>
+						<li>James - Dev</li>
+						<li>Tom - Dev</li>
+						<li>Will - DevOps</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>Challenges</h1>
+					<h2>Servers - Prod</h2>
+					<img src="images/prod.png">
+				</section>
+
+				<section>
+					<h1>Servers - Stage</h1>
+
+					<img src="images/stage.png">
+				</section>
+
+				<section>
+					<h1>The Plan</h1>
 
 					<ul>
-						<li>Write the amazing new app while maintaining the existing product.</li>
-						<li>Migrating data from the old app to the new</li>
+						<li>Keep a largely similar web interface</li>
+						<li>All the hard work should be behind the scenes</li>
+						<li>Customers like the app - developers don't</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Migration script</h1>
+
+					<ul>
+						<li>772 commits, 6000 lines in one file!</li>
+						<li>Extract/transform/load 35GB data.</li>
+						<li>Biggest table had 90million rows</li>
+						<li>xhprof/uprofiler</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h1>What we did well</h1>
+
+					<ul>
+						<li>Wrote and tested a migration playbook - 10 pages, all the nitty gritty</li>
+						<li>Optimised the heck out of the slow stuff
+						<ul>
+							<li>ETL</li>
+							<li>Indexing ~30Gb data in elasticsearch</li>
+						</ul>
+						</li>
+
+					</ul>
+				</section>
+
+				<section>
+					<h1>What we didn't do well</h1>
+
+					<ul>
+						<li>Follow the migration playbook</li>
+						<li>Get enough sleep</li>
+						<li>Delay launch until we were ready!</li>
 					</ul>
 				</section>
 
@@ -107,33 +181,21 @@
 					<h1>What worked</h1>
 
 					<ul>
-						<li>Deployments with capistrano</li>
-						<li>Slack for team communication</li>
-						<li>Ansible/Devops</li>
+						<li>Capistrano</li>
+						<li>Slack</li>
+						<li>Ansible + Vagrant</li>
 						<li>PHPStorm</li>
-						<li>Avoiding PHP when appropriate</li>
-						<li>Innobackupex streaming database to local</li>
+						<li>Ditching PHP</li>
+						<li>Ditching SQL dumps</li>
 						<li>Code Review</li>
 						<li>Continuous Integration</li>
-						<li>github</li>
+						<li>GitHub</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>What didn't</h1>
-
-					<ul>
-						<li>Throw everything out and start from scratch</li>
-						<li>Time estimates</li>
-						<li>Premature optimisation</li>
-						<li>Low spec iMacs</li>
-						<li>bitbucket (show graphs)</li>
-						<li>hipchat</li>
-					</ul>
-				</section>
-
-				<section>
-					<h1>What worked - Capistrano</h1>
+					<h3>What worked</h3>
+					<h1>Capistrano</h1>
 
 					<pre><code class="hljs" data-trim contenteditable>
 					$ bin/cap prod deploy
@@ -151,23 +213,26 @@
 				</section>
 
 				<section>
-					<h1>What worked - Slack</h1>
+					<h3>What worked</h3>
+					<h1>Slack</h1>
 
 					<ul>
 						<li>No more productivity killing interruptions</li>
 						<li>Searchable archive</li>
-						<li>Gifs (rockets)</li>
+						<li>Gifs</li>
 						<li>Integrations
 							<ul>
-								<li>Everybody knows I'm deploying</li>
-								<li>Everybody knows James broke the build</li>
+								<li>Everybody can see I'm deploying</li>
+								<li>Everybody can see James broke the build</li>
+								<li>Everybody can see the uptick in sentry errors when Rami deployed the broken build</li>
 							</ul>
 						</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>What worked - Ansible + Vagrant</h1>
+					<h3>What worked</h3>
+					<h1>Ansible + Vagrant</h1>
 
 					<pre><code class="hljs" data-trim contenteditable>
 					$ ansible-playbook playbook.yml
@@ -183,18 +248,21 @@
 				</section>
 
 				<section>
-					<h1>What worked - PHPStorm</h1>
+					<h3>What worked</h3>
+					<h1>PHPStorm</h1>
 
 					<ul>
 						<li>I used to hate IDEs - not anymore</li>
+						<li>The symfony2 plugin is amazing</li>
 						<li>Knows every service</li>
-						<li>Crazy good intellisense</li>
+						<li>Crazy good code completion</li>
 						<li>Cheap!</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>What worked - Ditching PHP</h1>
+					<h3>What worked</h3>
+					<h1>Ditching PHP</h1>
 
 					<ul>
 						<li>There are some things you shouldn't use PHP for</li>
@@ -204,7 +272,8 @@
 				</section>
 
 				<section>
-					<h1>What worked - Ditching SQL dumps</h1>
+					<h3>What worked</h3>
+					<h1>Ditching SQL dumps</h1>
 
 					<ul>
 						<li>Used to backup via sql dumps (we skipped the big tables to speed it up) 45 mins</li>
@@ -214,9 +283,9 @@
 					</ul>
 				</section>
 
-
 				<section>
-					<h1>What worked - Code review</h1>
+					<h3>What worked</h3>
+					<h1>Code review</h1>
 
 					<ul>
 						<li>Every piece of work, no matter how small, gets reviewed</li>
@@ -228,7 +297,8 @@
 				</section>
 
 				<section>
-					<h1>What worked - Continuous integration</h1>
+					<h3>What worked</h3>
+					<h1>Continuous integration</h1>
 
 					<ul>
 						<li>We have 2 functional tests! - Have caught 4 bugs this way!</li>
@@ -246,17 +316,42 @@
 				</section>
 
 				<section>
-					<h1>What worked - GitHub</h1>
-
+					<h3>What worked</h3>
+					<h1>GitHub</h1>
+					<img src="images/commits.png">
 					<ul>
 						<li>Bitbucket sucked</li>
-						<li>Look at productivity gain from switching to github</li>
+						<li>26 weeks ago is when we switched to github</li>
 						<li>We didn't realise how much we hated bitbucket</li>
+					</ul>
+
+				</section>
+
+				<section>
+					<h1>What didn't work</h1>
+
+					<ul>
+						<li>Starting from scratch</li>
+						<li>Time estimates</li>
+						<li>Premature optimisation</li>
+						<li>Low spec iMacs</li>
+						<li>BitBucket &amp; HipChat</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>What didn't work - Time Estimates</h1>
+					<h3>What didn't</h3>
+					<h1>Start from scratch</h1>
+
+					<ul>
+						<li>The first attempt was a rewrite and reimagining of everything</li>
+						<li>As is typically the case when you try such things - it failed</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>What didn't</h3>
+					<h1>Time Estimates</h1>
 
 					<ul>
 						<li>Not a good look for a company called EstimateOne!</li>
@@ -267,7 +362,8 @@
 				</section>
 
 				<section>
-					<h1>What didn't work - Scope creep and premature optimisation</h1>
+					<h3>What didn't</h3>
+					<h1>Scope creep and premature optimisation</h1>
 
 					<ul>
 						<li>Don't build it til you need it</li>
@@ -278,53 +374,24 @@
 
 
 				<section>
-					<h1>What didn't work - Low spec hardware</h1>
+					<h3>What didn't</h3>
+					<h1>Low spec hardware</h1>
 
 					<ul>
 						<li>Our iMacs had mechanical hard disks and 8Gb ram</li>
-						<li>Running multiple vagrant machines + phpstorm was excruciating</li>
+						<li>Running multiple vagrant machines + PHPStorm was excruciating</li>
 						<li>Don't skimp on something you're using 35-40 hours a week</li>
 					</ul>
 				</section>
 
 				<section>
-					<h1>What didn't work - Atlassian products</h1>
+					<h3>What didn't</h3>
+					<h1>Atlassian products</h1>
 
 					<ul>
 						<li>HipChat: ew</li>
 						<li>Bitbucket: Recall productivity gains </li>
-						<li>I won't be buying shares</li>
-					</ul>
-				</section>
-
-
-				<section>
-					<h1>Migration script</h1>
-
-					<ul>
-						<li>772 commits, 6000 lines in one file!</li>
-						<li>Extract/transform/load 35GB data.</li>
-						<li>Biggest table had 90million rows</li>
-						<li>xhprof/uprofiler</li>
-					</ul>
-				</section>
-
-				<section>
-					<h1>What we did well</h1>
-
-					<ul>
-						<li>Wrote and tested a migration playbook - 10 pages, all the nitty gritty</li>
-						<li>Optimised the heck out of the slow stuff (godsend, re deletion fuckup), eg mig script, elasticsearch population</li>
-
-					</ul>
-				</section>
-				<section>
-					<h1>What we didn't do well</h1>
-
-					<ul>
-						<li>Follow the migration playbook</li>
-						<li>Get enough sleep</li>
-						<li>Delay launch until we were ready!</li>
+						<li>I won't be buying Atlassian shares</li>
 					</ul>
 				</section>
 
@@ -336,6 +403,10 @@
 						<li>Elasticsearch/logstash/kibana</li>
 						<li>New products</li>
 					</ul>
+				</section>
+
+				<section>
+					<h1>Questions</h1>
 				</section>
 
 			</div>
@@ -354,6 +425,19 @@
 				progress: true,
 				history: true,
 				center: true,
+
+				// The "normal" size of the presentation, aspect ratio will be preserved
+			    // when the presentation is scaled to fit different resolutions. Can be
+			    // specified using percentage units.
+			    width: 1600,
+			    height: 900,
+
+			    // Factor of the display size that should remain empty around the content
+			    margin: 0.05,
+
+			    // Bounds for smallest/largest possible scale to apply to content
+			    minScale: 0.4,
+			    maxScale: 2.5,
 
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
 
